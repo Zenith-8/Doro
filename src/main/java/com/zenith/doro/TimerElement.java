@@ -28,12 +28,15 @@ public class TimerElement extends Group {
     private long seconds;
     private double circumference;
     private boolean isRunning = false;
+    private Scene scene;
 
     private TimerThread runnableThread = new TimerThread(clockLabel, progressBar, this, 0, circumference);
 
-    public TimerElement(Scene scene) {
+    public TimerElement(Scene iScene) {
 
-        int minutes = 25;
+
+        this.scene = iScene;
+        int minutes = 1;
 
         double width = scene.getWidth();
         double height = scene.getHeight();
@@ -102,9 +105,7 @@ public class TimerElement extends Group {
         this.seconds = seconds;
 
         try{
-            System.out.println("isThreadRunning: " + runnableThread.isRunning());
             if(runnableThread.isRunning()){
-                System.out.println("Interrupting...");
                 runnableThread.interrupt();
             }
 
@@ -112,8 +113,6 @@ public class TimerElement extends Group {
             System.out.println(runnableThread);
 
             runnableThread.start();
-            System.out.println("Starting runnableThread");
-            System.out.println("[POST] isThreadRunning: " + runnableThread.isRunning());
         } catch (Exception e){
             e.printStackTrace();
         }

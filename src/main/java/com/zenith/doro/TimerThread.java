@@ -2,6 +2,7 @@ package com.zenith.doro;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class TimerThread extends Thread{
@@ -24,14 +25,16 @@ public class TimerThread extends Thread{
         this.isRunning = false;
     }
 
-    private void timerLoop(long seconds, double basis){
-        long elapsedTime, startTime = System.currentTimeMillis();
+    private void timerLoop(long seconds, double basis, boolean isBreak){
 
-        // Changing the incrementer to a small value will increase visual performance but has higher computational requirements O(n)
-        /* A value of 0.05 is the smallest necessary for clean lines */
 
         try {
-            for (double i = 0; i <= seconds && !Thread.currentThread().isInterrupted(); i += stepSize) {
+            System.out.println(seconds);
+            long elapsedTime, startTime = System.currentTimeMillis();
+            // Changing the incrementer to a small value will increase visual performance but has higher computational requirements O(x * n), where x is the number of iterations per second
+            /* A value of 0.05 is the smallest necessary for clean lines */
+
+            for (double i = 0; i  + 1 < seconds && !Thread.currentThread().isInterrupted(); i += stepSize) {
                 double value = (basis) * (i / seconds);
                 elapsedTime = seconds - (System.currentTimeMillis() - startTime) / 1000;
                 String label = ((int) elapsedTime / 60) + ":" + String.format("%02d", (int) (elapsedTime % 60));
@@ -42,15 +45,15 @@ public class TimerThread extends Thread{
                 });
                 Thread.sleep((long) (stepSize * 1000));
             }
-            if(seconds == 300){
 
-            }
+            timerElement.playSound();
+
         }
-        catch (InterruptedException e) {
+        catch (Exception e) {
             Thread.currentThread().interrupt();
         }
 
-        timerElement.playSound();
+
 
     }
 
@@ -61,9 +64,8 @@ public class TimerThread extends Thread{
 
         try {
             while(!currentThread().isInterrupted()){
-                System.out.println(Thread.activeCount());
-                timerLoop(seconds, circumference);
-                timerLoop(300, circumference);
+                timerLoop(seconds, circumference, false);
+                timerLoop(300, circumference, true);
             }
         } catch (Exception e){
             e.printStackTrace();
